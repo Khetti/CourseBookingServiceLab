@@ -31,14 +31,45 @@ class CoursebookingserviceApplicationTests {
 	}
 
 	@Test
-	public void canGetCourseByName() {
-		Course course = new Course("Professional Software Development", "Glasgow", 5);
-		courseRepository.save(course);
-		Customer customer = new Customer("Greg", "Kirky", 21 );
-		customerRepository.save(customer);
-		Booking booking = new Booking("14-02-2020", customer, course);
-		bookingRepository.save(booking);
+	public void canGetAllCourses() {
+		List<Course> found = courseRepository.findAll();
+		assertEquals(4, found.size());
+	}
 
+	@Test
+	public void canGetAllCoursesByRating() {
+		List<Course> found = courseRepository.findByRating(4);
+		assertEquals(2, found.size());
+	}
+
+	@Test
+	public void canGetAllCoursesByCustomer() {
+		List<Course> found = courseRepository.findByBookingsCustomerId(1L);
+		assertEquals(3, found.size());
+	}
+
+	@Test
+	public void canGetAllCustomersByCourse() {
+		List<Customer> found = customerRepository.findByBookingsCourseId(1L);
+		assertEquals(4, found.size());
+	}
+
+	@Test
+	public void canGetBookingsByDate(){
+		List<Booking> found = bookingRepository.findByDate("14/02/2020");
+		assertEquals(3, found.size());
+	}
+
+	@Test
+	public void canGetCustomersByTownAndCourse(){
+		List<Customer> found = customerRepository.findByTownIgnoreCaseAndBookingsCourseId("Cumbernauld", 4L);
+		assertEquals(2, found.size());
+	}
+
+	@Test
+	public void canGetCustomersByTownAndCourseOverACertainAge(){
+		List<Customer> found = customerRepository.findByTownIgnoreCaseAndBookingsCourseIdAndAgeGreaterThan("Cumbernauld", 4L, 29);
+		assertEquals(1, found.size());
 	}
 
 }
